@@ -14,6 +14,8 @@ public class BolicaControl : MonoBehaviour
     public float jumpForce = 5.0f;//el impulso de la bola.
     bool isGrounded = true; //booleano que detecta si la bola está tocando el suelo o no.
 
+    public Joystick input;//variable que detecta el joystick.
+
     // Start is called before the first frame update
     void Start()
     {
@@ -34,8 +36,12 @@ public class BolicaControl : MonoBehaviour
     private void FixedUpdate()
     {
         //creamos unas variables para capturar los movimientos horizontal y vertical
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        //float horizontal = Input.GetAxis("Horizontal");
+        //float vertical = Input.GetAxis("Vertical");
+
+        //asignamos el movimiento al joystick.
+        float horizontal = input.Horizontal;
+        float vertical = input.Vertical;    
 
         //ahora capturamos el movimiento de forma completa.
         movimiento= new Vector3 (horizontal, 0.0f, vertical);
