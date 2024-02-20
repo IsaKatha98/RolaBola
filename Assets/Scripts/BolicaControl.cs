@@ -6,10 +6,13 @@ public class BolicaControl : MonoBehaviour
     public float velocidad;//variable que modifica la velocidad de la pelota
     Vector3 movimiento;
     Vector3 posicionInicial; //posición a la que vuelve la pelota si hace trigger con un enemigo.
-    int monedas = 0; 
+    int monedas = 0;
 
-    bool isJump=false;//booleano que detecta si ha saltado o no
+    public float tamRaycast = 5.0f;
+
+    bool canJump=true;//booleano que detecta si ha saltado o no
     public float jumpForce = 5.0f;//el impulso de la bola.
+    bool isGrounded = true; //booleano que detecta si la bola está tocando el suelo o no.
 
     // Start is called before the first frame update
     void Start()
@@ -18,6 +21,14 @@ public class BolicaControl : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         posicionInicial=transform.position;//guardamos la posición inicial de la pelota.
 
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space)&&isGrounded)
+        {
+            Jump();
+        }
     }
 
     private void FixedUpdate()
@@ -32,12 +43,24 @@ public class BolicaControl : MonoBehaviour
         //asignamos el movimiento al rb.
         rb.AddForce(movimiento*velocidad);
 
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        //comprobamos que el raycast está tocando el suelo
+        Debug.DrawRay(transform.position, Vector3.down * tamRaycast, Color.red);
+        Vector3 floor = transform.TransformDirection(Vector3.down);
 
-            Jump();
+        if (Physics.Raycast(transform.position, floor, 1.03f))
+        {
+            isGrounded = true;
+            canJump = true;
+            Debug.Log("Contacto con el suelo");
+
+        }
+        else
+        {
+            canJump = false;
+            isGrounded = false;
+            Debug.Log("No hay contacto con el suelo");
         }
 
-      
     }
 
     private void OnTriggerEnter(Collider other)
@@ -67,13 +90,30 @@ public class BolicaControl : MonoBehaviour
 
     private void Jump()
     {
-        isJump = true;
-        if (isJump)
+        if (canJump)
         {
             rb.AddForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse);
-            isJump=false;
-        
-        
+
+            Vector3 floor = transform.TransformDirection(Vector3.down);
+
+            if (Physics.Raycast(transform.position, floor, 1.03f))
+            {
+                isGrounded = true;
+                canJump = true;
+                Debug.Log("Contacto con el suelo");
+
+            }
+            else
+            {
+                canJump = false;
+                isGrounded = false;
+                Debug.Log("No hay contacto con el suelo");
+            }
+
+
         }
+
+       
+
     }
 }
