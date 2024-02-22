@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BolicaControl : MonoBehaviour
 {
@@ -7,6 +8,8 @@ public class BolicaControl : MonoBehaviour
     Vector3 movimiento;
     Vector3 posicionInicial; //posición a la que vuelve la pelota si hace trigger con un enemigo.
     int monedas = 0;
+    public Text textoMonedas;
+    public Text victoria;
 
     public float tamRaycast = 5.0f;
 
@@ -22,6 +25,9 @@ public class BolicaControl : MonoBehaviour
         //capturamos el rb de la bola.
         rb = GetComponent<Rigidbody>();
         posicionInicial=transform.position;//guardamos la posición inicial de la pelota.
+
+        //desactivamos el texto de victoria, para que no sea vea desde el principio.
+        victoria.enabled = false;
 
     }
 
@@ -83,13 +89,17 @@ public class BolicaControl : MonoBehaviour
             rb.velocity = Vector3.zero;//ponemos la velocidad inicial a 0.
             rb.angularVelocity = Vector3.zero;//ponemos la rotación a 0.
             monedas = 0;
+            textoMonedas.text = "Monedas: 0";
+         
         
         }
         //en caso de que la bola choque con una moneda
         else if (other.CompareTag("Dollars"))
         {
             other.gameObject.SetActive(false);//desactivamos la moneda
-            monedas=monedas+1;
+            monedas++;
+
+            textoMonedas.text = "Monedas: " + monedas;
         }
 
     }
