@@ -5019,7 +5019,7 @@ GameObject:
   - component: {fileID: 1382248580}
   - component: {fileID: 1382248579}
   m_Layer: 0
-  m_Name: Cylinder
+  m_Name: Bandera
   m_TagString: salida
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6044,7 +6044,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 258f9e5efb7d3f54c8d5659c23da5de7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
+  speed: 1
   textoMonedas: {fileID: 442573404}
   victoria: {fileID: 1504607811}
   tamRaycast: 5

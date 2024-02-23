@@ -20,7 +20,8 @@ public class Accel : MonoBehaviour
 
     bool canJump = true;//booleano que detecta si ha saltado o no
     public float jumpForce = 5.0f;//el impulso de la bola.
-    bool isGrounded = true; //booleano que detecta si la bola está tocando el suelo o no.
+    bool isGrounded = true; //booleano que detecta si la bola está tocando el suelo o no
+    float limitesuelo = -10f;//variable que pondrá un límite por si la bola se cae.
 
     //public Joystick input;//variable que detecta el joystick.
 
@@ -42,22 +43,41 @@ public class Accel : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //se encarga de recoger la aceleración dependiendo de la orientación del móvil.
-        Vector3 tilt = Input.acceleration;
-
-        //TODO= tener en cuenta si el móvil está sobre la mesa o no.
-        tilt = Quaternion.Euler(90, 0, 0)* tilt;
-
-        rb.AddForce(tilt*speed);
-
-        Touch touch = Input.GetTouch(0);
-        //TODO: esto tiene que ser un tap
-        if (touch.phase == TouchPhase.Began && isGrounded)
+        //verificamos si la posición en el eje Y de la bola está por encima del límite.
+        if (transform.position.y>limitesuelo)
         {
-            Jump();
+            //se encarga de recoger la aceleración dependiendo de la orientación del móvil.
+            Vector3 tilt = Input.acceleration;
+
+            //TODO= tener en cuenta si el móvil está sobre la mesa o no.
+            tilt = Quaternion.Euler(90, 0, 0) * tilt;
+
+            rb.AddForce(tilt * speed);
 
 
+            //TODO: esto tiene que ser un tap
+
+            if (Input.touchCount > 0)
+            {
+                Touch touch = Input.GetTouch(0);
+
+                if (touch.phase == TouchPhase.Began && isGrounded)
+                {
+                    Jump();
+
+
+                }
+            }
+
+        //en caso de que esté por debajo del límite, pues 
+        } else {
+
+            reinicio();
         }
+      
+
+        
+       
 
     }
 
