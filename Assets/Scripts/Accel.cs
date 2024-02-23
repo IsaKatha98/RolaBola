@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Accel : MonoBehaviour
 {
@@ -9,10 +10,12 @@ public class Accel : MonoBehaviour
     public float speed;
 
     Vector3 movimiento;
-    Vector3 posicionInicial; //posición a la que vuelve la pelota si hace trigger con un enemigo.
+    Vector3 posicionInicial= new Vector3(-20, 5, -20); //posición a la que vuelve la pelota si hace trigger con un enemigo.
     int monedas = 0;
     public TMP_Text textoMonedas;
     public TMP_Text victoria;
+   
+
 
     bool isOut;
 
@@ -21,7 +24,7 @@ public class Accel : MonoBehaviour
     bool canJump = true;//booleano que detecta si ha saltado o no
     public float jumpForce = 5.0f;//el impulso de la bola.
     bool isGrounded = true; //booleano que detecta si la bola está tocando el suelo o no
-    float limitesuelo = -10f;//variable que pondrá un límite por si la bola se cae.
+    float limitesuelo = -7f;//variable que pondrá un límite por si la bola se cae.
 
     //public Joystick input;//variable que detecta el joystick.
 
@@ -31,8 +34,6 @@ public class Accel : MonoBehaviour
     {
         //asociamos con el rb de la bola.
         rb=GetComponent<Rigidbody>();
-
-        posicionInicial = transform.position;//guardamos la posición inicial de la pelota.
 
         //desactivamos el texto de victoria, para que no sea vea desde el principio.
         victoria.enabled = false;
@@ -74,10 +75,6 @@ public class Accel : MonoBehaviour
 
             reinicio();
         }
-      
-
-        
-       
 
     }
 
@@ -106,14 +103,14 @@ public class Accel : MonoBehaviour
             {
                 isGrounded = true;
                 canJump = true;
-                Debug.Log("Contacto con el suelo");
+      //          Debug.Log("Contacto con el suelo");
 
             }
             else
             {
                 canJump = false;
                 isGrounded = false;
-                Debug.Log("No hay contacto con el suelo");
+       //         Debug.Log("No hay contacto con el suelo");
             }
 
             //si ha salido, llamamos a la la siguiente fase.
@@ -135,20 +132,11 @@ public class Accel : MonoBehaviour
             //ponemos visible el texto de victoria
             victoria.enabled = true;
             isOut = true;
+            reinicio();
 
             //en caso de que la bola haga trigger con un enemigo
         }
-        else if (other.CompareTag("Enemy"))
-        {
-            //volvemos a la posición inicial
-            rb.MovePosition(posicionInicial);
-            rb.velocity = Vector3.zero;//ponemos la velocidad inicial a 0.
-            rb.angularVelocity = Vector3.zero;//ponemos la rotación a 0.
-            monedas = 0;
-            textoMonedas.text = "Monedas: 0";
-
-
-        }
+        
         //en caso de que la bola choque con una moneda
         else if (other.CompareTag("Dollars"))
         {
@@ -184,5 +172,24 @@ public class Accel : MonoBehaviour
 
 
         }
+    }
+
+    public void reinicio()
+    {
+        //recargamos la escena actual.
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        monedas = 0;
+        textoMonedas.text = "Monedas: 0";
+
+    }
+
+    public void muertePorBola()
+    {
+        //volvemos a la posición inicial
+        rb.MovePosition(posicionInicial);
+        rb.velocity = Vector3.zero;//ponemos la velocidad inicial a 0.
+        rb.angularVelocity = Vector3.zero;//ponemos la rotación a 0.
+        monedas = 0;
+        textoMonedas.text = "Monedas: 0";
     }
 }
